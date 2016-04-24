@@ -12,6 +12,7 @@ template<class T, class A, class M>
 class LCTNode : public TNode<T, A, M>{
 private:
 	size_t id;
+	LCTNode *child[2], *father;
 	T tagTree, tagChain;
 	AuxTree<T, A, M> subtree;
 	bool reverse;
