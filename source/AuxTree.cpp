@@ -79,7 +79,7 @@ void AuxTree<T, A, M> :: Treap_Delete(const AuxNode<T, A, M> &rhs, AuxNode<T, A,
 			delete k;
 		}
 		else{
-			if((t -> ls -> getrand()) < t -> rs -> getrand()){
+			if((t -> ls -> getrand()) < (t -> rs -> getrand())){
 				RR(t); 
 				Treap_Delete(rhs, t -> rs);
 				update(t);
@@ -103,6 +103,13 @@ template<class T, class A, class M>
 void AuxTree<T, A, M> :: erase(const AuxNode<T, A, M> &rhs) {
 	if(find(rhs) == NULL) throw "This ID doesn't exist!";
 	Treap_Delete(rhs, root);
+}
+
+template<class T, class A, class M>
+void AuxTree<T, A, M> :: Treap_Clear(const AuxNode<T, A, M>* t) {
+	if(t -> ls != NULL) Treap_Clear(t -> ls);
+	if(t -> rs != NULL) Treap_Clear(t -> rs);
+	delete t;
 }
 
 #endif
