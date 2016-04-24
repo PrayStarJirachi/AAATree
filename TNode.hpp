@@ -8,9 +8,8 @@ namespace sjtu{
 template<class T, class A, class M>
 class TNode{
 protected:
-	T data;
+	T data, sum;
 	size_t size;
-	TNode *child[2], *father;
 
 	static A add;
 	static M mult;
@@ -18,9 +17,6 @@ protected:
 public:
 	TNode();
 	virtual ~TNode();
-
-	virtual void pushdown() = 0;
-	virtual void update() = 0;
 
 };
 
