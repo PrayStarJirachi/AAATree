@@ -10,7 +10,6 @@ class TNode{
 protected:
 	T data;
 	size_t size;
-	TNode *child[2], *father;
 
 	static A add;
 	static M mult;

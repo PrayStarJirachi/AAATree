@@ -9,6 +9,7 @@ template<class T, class A, class M>
 class AuxNode : TNode<T, A, M>{
 private:
 	T tagTree;
+	AuxNode *child[2], *father;
 
 public:
 	void pushdown();
