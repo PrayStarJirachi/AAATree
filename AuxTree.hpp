@@ -24,6 +24,9 @@ public:
 	AuxNode<T, A, M>* find(const AuxNode<T, A, M> &rhs);
 	void insert(const AuxNode<T, A, M> &rhs);
 	void erase(const AuxNode<T, A, M> &rhs);
+	AuxNode<T, A, M>* getroot(){
+		return root;
+	}
 	~AuxTree(){
 		if(root != NULL) Treap_Clear(root);
 	} 
