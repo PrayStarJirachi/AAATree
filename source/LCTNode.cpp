@@ -24,7 +24,8 @@ void LCTNode<T, A, M>::makeTagTree(const T &value) {
 		tagTree = add(tagTree, value);
 	}
 	data = add(data, value);
-	sum = add(sum, mult(subtree.getSize(), value));
+	sum = add(sum, mult(subtree.getSize() + 1, value));
+	subtree.root.makeTagTree(value);
 }
 
 template<class T, class A, class M>
