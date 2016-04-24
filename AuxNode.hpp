@@ -14,7 +14,7 @@ private:
 	void makeDelta(const T &value);
 
 public:
-	void pushdown();
+	void pushTagTree();
 	void update();
 
 };
