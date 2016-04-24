@@ -10,19 +10,22 @@ class AuxTree;
 
 template<class T, class A, class M>
 class LCTNode : public TNode<T, A, M>{
+friend class AuxTree<T, A, M>;
 private:
-	size_t id;
 	LCTNode *child[2], *father;
 	T tagTree, tagChain;
+	bool haveTagTree, haveTagChain;
 	AuxTree<T, A, M> subtree;
 	bool reverse;
 
 public:
+	const size_t id;
+
 	LCTNode(const size_t &id);
 
-	void pushdown();
+	void pushTagSubTree();
+	void pushTagChain();
 	void update();
-
 };
 
 #include "source/LCTNode.cpp"
