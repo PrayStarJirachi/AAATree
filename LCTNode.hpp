@@ -14,9 +14,8 @@ friend class AuxTree<T, A, M>;
 private:
 	LCTNode *child[2], *father;
 	T tagTree, tagChain;
-	bool haveTagTree, haveTagChain;
+	bool haveTagTree, haveTagChain, reverse;
 	AuxTree<T, A, M> subtree;
-	bool reverse;
 
 public:
 	const size_t id;
@@ -26,6 +25,7 @@ public:
 	void pushTagSubTree();
 	void pushTagChain();
 	void update();
+
 };
 
 #include "source/LCTNode.cpp"

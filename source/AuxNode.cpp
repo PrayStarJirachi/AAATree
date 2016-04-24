@@ -7,11 +7,12 @@ template<class T, class A, class M>
 void AuxNode<T, A, M>::makeTagTree(const T &value) {
 	if (!haveTagTree) {
 		tagTree = value;
+		haveTagTree = true;
 	} else {
 		tagTree = add(tagTree, value);
 	}
-	haveTagTree = true;
-	sum = add(data, mult(size, sum));
+	data = add(data, sum);
+	sum = add(sum, mult(size, sum));
 }
 
 template<class T, class A, class M>

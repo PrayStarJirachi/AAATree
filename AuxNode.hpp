@@ -11,7 +11,7 @@ private:
 	T tagTree;
 	bool haveTagTree;
 	AuxNode *child[2], *father;
-	void makeDelta(const T &value);
+	void makeTagTree(const T &value);
 
 public:
 	void pushTagTree();

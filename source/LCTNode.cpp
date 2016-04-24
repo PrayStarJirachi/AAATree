@@ -5,12 +5,26 @@
 
 template<class T, class A, class M>
 void LCTNode<T, A, M>::makeTagChain(const T &value) {
-	
+	if (!haveTagChain) {
+		tagChain = value;
+		haveTagChain = true;
+	} else {
+		tagChain = add(tagChain, value);
+	}
+	data = add(data, value);
+	sum = add(sum, mult(size, value));
 }
 
 template<class T, class A, class M>
 void LCTNode<T, A, M>::makeTagTree(const T &value) {
-
+	if (!haveTagTree) {
+		tagTree = value;
+		haveTagTree = true;
+	} else {
+		tagTree = add(tagTree, value);
+	}
+	data = add(data, value);
+	sum = add(sum, mult(subtree.getSize(), value));
 }
 
 template<class T, class A, class M>
