@@ -7,10 +7,10 @@
 
 template<class T, class A, class M>
 void AuxTree<T, A, M> :: LL(AuxNode<T, A, M>* &t){
-	AuxNode<T, A, M>* k = t -> rs;
-	k -> downpush();
-	t -> rs = k -> ls; 
-	k -> ls = t;
+	AuxNode<T, A, M>* k = t -> child[1];
+	k -> pushTagTree();
+	t -> child[1] = k -> child[0]; 
+	k -> child[0] = t;
 	t -> update();
 	k -> update();
 	t = k;
@@ -18,10 +18,10 @@ void AuxTree<T, A, M> :: LL(AuxNode<T, A, M>* &t){
 
 template<class T, class A, class M>	
 void AuxTree<T, A, M> :: RR(AuxNode<T, A, M>* &t){
-	AuxNode<T, A, M>* k = t -> ls;
-	k -> downpush();
-	t -> ls = k -> rs;
-	k -> rs = t;
+	AuxNode<T, A, M>* k = t -> child[0];
+	k -> pushTagTree();
+	t -> child[0] = k -> child[1];
+	k -> child[1] = t;
 	t -> update();
 	k -> update();
 	t = k;
@@ -31,31 +31,31 @@ template<class T, class A, class M>
 AuxNode<T, A, M>* AuxTree<T, A, M> :: Treap_find(const int &key, AuxNode<T, A, M>* t) {
 	if(t == NULL) return NULL;
 	t -> pushdown();
-	if(key < (t -> getkey())) return Treap_find(key, t -> ls); else
-	if(key > (t -> getkey())) return Treap_find(key, t -> rs); else
+	if(key < (t -> data -> id)) return Treap_find(key, t -> child[0]); else
+	if(key > (t -> data -> id)) return Treap_find(key, t -> child[1]); else
 	return t;
 }
 
 template<class T, class A, class M>
 AuxNode<T, A, M>* AuxTree<T, A, M> :: find(const AuxNode<T, A, M> &rhs) {
-	int Key = rhs.getkey();
+	int Key = rhs.data -> id;
 	return Treap_find(Key, root);
 }
 
 template<class T, class A, class M>
 void AuxTree<T, A, M> :: Treap_Insert(const AuxNode<T, A, M> &rhs, AuxNode<T, A, M>* &t) {
 	if(t == NULL){
-		t = new AuxNode<T, A, M>(rhs.getkey(), rand());
+		t = new AuxNode<T, A, M>(rhs.data, rand());
 		return;
 	}
-	t -> downpush();
-	if(rhs.getkey() < (t -> getkey())){
-		Treap_Insert(rhs, t -> ls);
-		if((t -> ls -> getrand()) < (t -> getrand())) RR(t);
+	t -> pushTagTree();
+	if(rhs.data -> id < (t -> data -> id)){
+		Treap_Insert(rhs, t -> child[0]);
+		if((t -> child[0] -> getrand()) < (t -> getrand())) RR(t);
 	}
 	else{
-		Treap_Insert(rhs, t -> rs);
-		if((t -> rs -> getrand()) < (t -> getrand())) LL(t);
+		Treap_Insert(rhs, t -> child[1]);
+		if((t -> child[1] -> getrand()) < (t -> getrand())) LL(t);
 	}
 	t -> update();
 }
@@ -68,34 +68,34 @@ void AuxTree<T, A, M> :: insert(const AuxNode<T, A, M> &rhs) {
 
 template<class T, class A, class M>
 void AuxTree<T, A, M> :: Treap_Delete(const AuxNode<T, A, M> &rhs, AuxNode<T, A, M>* &t) {
-	t -> downpush();
-	if((t -> getkey()) == (rhs.getkey())){
-		if(t -> ls == NULL || t -> rs == NULL){
+	t -> pushTagTree();
+	if((t -> data -> id) == (rhs.data -> id)){
+		if(t -> child[0] == NULL || t -> child[1] == NULL){
 			AuxNode<T, A, M>* k = t;
-			if(t -> ls != NULL)
-				t = t -> ls;
+			if(t -> child[0] != NULL)
+				t = t -> child[0];
 			else 
-				t = t -> rs;
+				t = t -> child[1];
 			delete k;
 		}
 		else{
-			if((t -> ls -> getrand()) < (t -> rs -> getrand())){
+			if((t -> child[0] -> getrand()) < (t -> child[1] -> getrand())){
 				RR(t); 
-				Treap_Delete(rhs, t -> rs);
+				Treap_Delete(rhs, t -> child[1]);
 				update(t);
 			}
 			else{
 				LL(t);
-				Treap_Delete(rhs, t -> ls);
+				Treap_Delete(rhs, t -> child[0]);
 				update(t);
 			}
 		}
 		return;
 	}
-	if((rhs.getkey()) < (t -> getkey())) 
-		Treap_Delete(rhs, t -> ls);
+	if((rhs.data -> id) < (t -> data -> id)) 
+		Treap_Delete(rhs, t -> child[0]);
 	else 
-		Treap_Delete(rhs, t -> rs);
+		Treap_Delete(rhs, t -> child[1]);
 	update(t);
 }
 
@@ -107,8 +107,8 @@ void AuxTree<T, A, M> :: erase(const AuxNode<T, A, M> &rhs) {
 
 template<class T, class A, class M>
 void AuxTree<T, A, M> :: Treap_Clear(const AuxNode<T, A, M>* t) {
-	if(t -> ls != NULL) Treap_Clear(t -> ls);
-	if(t -> rs != NULL) Treap_Clear(t -> rs);
+	if(t -> child[0] != NULL) Treap_Clear(t -> child[0]);
+	if(t -> child[1] != NULL) Treap_Clear(t -> child[1]);
 	delete t;
 }
 

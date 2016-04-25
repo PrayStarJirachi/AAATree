@@ -6,24 +6,28 @@
 namespace sjtu{
 
 template<class T, class A, class M>
+class AuxTree;
+
+template<class T, class A, class M>
 class AuxNode : TNode<T, A, M>{
+friend class AuxTree<T, A, M>;
 private:
-	T tagTree;
-<<<<<<< HEAD
+	int rnd;
+	T tagTree, sum;
+	size_t size;
 	bool haveTagTree;
 	AuxNode *child[2], *father;
+	LCTNode<T, A, M> *data;
 	void makeTagTree(const T &value);
 
-=======
-	int key, rnd;
-	AuxNode *ls, *rs;
->>>>>>> lwher
 public:
 	void pushTagTree();
 	void update();
-	AuxNode(int Key, int Rnd) : TNode<T, A, M>(), tagTree(), key(Key), rnd(Rnd), ls(NULL), rs(NULL) {}
-	int getkey() const {return key;}
-	int getrand() const {return key;}
+	AuxNode(LCTNode<T, A, M> *data, int Rnd) : TNode<T, A, M>(), tagTree(), data(data), rnd(Rnd) {
+		child[0] = child[1] = nullptr;
+	}
+	int getrand() const {return rnd;}
+
 };
 
 #include "source/AuxNode.cpp"

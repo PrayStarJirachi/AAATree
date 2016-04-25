@@ -12,11 +12,12 @@ private:
 
 public:
 	class Node{
+	friend class Forest<T, A, M>;
 	private:
 		LCTNode<T, A, M> *p;
 	
 	public:
-		Node();
+		Node(LCTNode<T, A, M> *rhs = nullptr);
 
 	};
 
@@ -24,12 +25,13 @@ public:
 	~Forest();
 
 	Node createTree();
-	void link(const Node &u, const Node &v);
-	void cut(const Node &u, const Node &v);
+	void setRoot(const Node &u);
 	void modify(const Node &u, const Node &v, const T &value);
 	void modify(const Node &u, const T &value);
 	T query(const Node &u, const Node &v);
 	T query(const Node &u);
+	void link(const Node &u, const Node &v);
+	void cut(const Node &u, const Node &v);
 
 };
 

@@ -4,7 +4,7 @@
 #define SJTU_TNODE_CPP
 
 template<class T, class A, class M>
-TNode<T, A, M>::TNode() : size(0) {
+TNode<T, A, M>::TNode() {
 }
 
 template<class T, class A, class M>

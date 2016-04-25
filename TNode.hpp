@@ -8,9 +8,6 @@ namespace sjtu{
 template<class T, class A, class M>
 class TNode{
 protected:
-	T data, sum;
-	size_t size;
-
 	static A add;
 	static M mult;
 
