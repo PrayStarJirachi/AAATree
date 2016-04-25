@@ -172,17 +172,17 @@ T LCTree<T, A, M>::queryChain(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v) {
 
 template<class T, class A, class B>
 void LCTree<T, A, M>::modifySubtree(LCTNode<T, A, M> *u, T value) {
-	access(u);
-	splay(u);
+	LCTree<T, A, M>::access(u);
+	LCTree<T, A, M>::splay(u);
 	u->makeTagSubtree(value);
 	u->update();
-	splay(u);
+	LCTree<T, A, M>::splay(u);
 }
 
 template<class T, class A, class B>
 void LCTree<T, A, M>::querySubtree(LCTNode<T, A, M> *u) {
-	access(u);
-	splay(u);
+	LCTree<T, A, M>::access(u);
+	LCTree<T, A, M>::splay(u);
 	return u->sumSubtree;
 }
 
