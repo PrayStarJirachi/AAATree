@@ -58,9 +58,19 @@ void LCTree<T, A, M>::zag(LCTNode<T, A, M> *u) {
 	LCTree<T, A, M>::rotate(u, 1);
 }
 
+template<class T, class A, class M>
+LCTNode<T, A, M>* LCTree<T, A, M>::getSplayRoot(LCTNode<T, A, M> *u) {
+	while (!LCTree<T, A, M>::isSplayRoot(u)) {
+		u = u->father;
+	}
+	return u;
+}
 
 template<class T, class A, class M>
 void LCTree<T, A, M>::splay(LCTNode<T, A, M> *u) {
+	LCTNode<T, A, M> uRoot = LCTree<T, A, M>::getSplayRoot(u);
+	del(uRoot->father, uRoot);
+	
 	while (!isSplayRoot(u)) {
 		LCTNode<T, A, M> *v = u->father;
 		if (isSplayRoot(v)) {
@@ -96,6 +106,7 @@ void LCTree<T, A, M>::splay(LCTNode<T, A, M> *u) {
 		}
 	}
 	LCTree<T, A, M>::update(u);
+	add(u->father, u);
 }
 
 template<class T, class A, class M>
@@ -174,7 +185,6 @@ void LCTree<T, A, M>::querySubtree(LCTNode<T, A, M> *u) {
 	splay(u);
 	return u->sumSubtree;
 }
-
 
 }
 
