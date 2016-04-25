@@ -17,6 +17,7 @@ private:
 	bool haveTagTree, haveTagChain;
 	AuxTree<T, A, M> subtree;
 	bool reverse;
+	T sum; 
 
 public:
 	const size_t id;
