@@ -4,8 +4,13 @@
 #define SJTU_LCTNODE_CPP
 
 template<class T, class A, class M>
-void LCTNode<T, A, M>::makeTagChain(const T &value) {
-	
+void LCTNode<T, A, M>::makeTagChain(const T &value) {	
+	if (!haveTagChain) {
+		tagChain = value;
+		haveTagChain = true;
+	} else {
+		tagChain = add(tagChain, value);
+	}
 }
 
 template<class T, class A, class M>

@@ -4,8 +4,7 @@
 #define SJTU_TNODE_CPP
 
 template<class T, class A, class M>
-TNode<T, A, M>::TNode() : size(0), father(nullptr) {
-	child[0] = child[1] = nullptr;
+TNode<T, A, M>::TNode() : size(0) {
 }
 
 template<class T, class A, class M>
