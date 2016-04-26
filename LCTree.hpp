@@ -50,9 +50,9 @@ void LCTree<T, A, M>::del(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v) {
 template<class T, class A, class M>
 void LCTree<T, A, M>::rotate(LCTNode<T, A, M> *u, int c) {
 	LCTNode<T, A, M> *v = u->father;
-	v->child[c ^ 1] = u->child[c];
-	if (u->child[c] != nullptr) {
-		u->child[c]->father = v;
+	v->child[c] = u->child[c ^ 1];
+	if (u->child[c ^ 1] != nullptr) {
+		u->child[c ^ 1]->father = v;
 	}
 	u->father = v->father;
 	if (v->father != nullptr) {
@@ -63,7 +63,7 @@ void LCTree<T, A, M>::rotate(LCTNode<T, A, M> *u, int c) {
 		}
 	}
 	v->father = u;
-	u->child[c] = v;
+	u->child[c ^ 1] = v;
 	v->update();
 	u->update();
 }
@@ -138,6 +138,17 @@ void LCTree<T, A, M>::splay(LCTNode<T, A, M> *u) {
 
 template<class T, class A, class M>
 LCTNode<T, A, M>* LCTree<T, A, M>::access(LCTNode<T, A, M> *u) {
+	std::vector<LCTNode<T, A, M>*> vec;
+	LCTNode<T, A, M> *step = u;
+	while (step != nullptr) {
+		vec.push_back(step);
+		step = step->father;
+	}
+	std::reverse(vec.begin(), vec.end());
+	for (auto p : vec) {
+		p->update();
+	}
+	
 	LCTNode<T, A, M>* v = nullptr;
 	for ( ; u != nullptr; u = u->father) {
 		LCTree<T, A, M>::splay(u);
