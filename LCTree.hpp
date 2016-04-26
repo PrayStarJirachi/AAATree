@@ -208,7 +208,7 @@ template<class T, class A, class M>
 void LCTree<T, A, M>::querySubtree(LCTNode<T, A, M> *u) {
 	LCTree<T, A, M>::access(u);
 	LCTree<T, A, M>::splay(u);
-	return add(u->sumSubtree, u->data);
+	return add(u->sumTree, u->data);
 }
 
 }
