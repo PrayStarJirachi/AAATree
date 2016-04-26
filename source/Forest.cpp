@@ -17,14 +17,14 @@ Forest<T, A, M>::Node::Node(LCTNode<T, A, M> *rhs) : p(rhs) {
 }
 
 template<class T, class A, class M>
-typename Forest<T, A, M>::Node Forest<T, A, M>::createTree() {
-	LCTNode<T, A, M> *ret = new LCTNode<T, A, M>(++size);
+typename Forest<T, A, M>::Node Forest<T, A, M>::createTree(const T &value) {
+	LCTNode<T, A, M> *ret = new LCTNode<T, A, M>(++size, value);
 	return Forest<T, A, M>::Node(ret);
 }
 
 template<class T, class A, class M>
 void Forest<T, A, M>::setRoot(const Forest<T, A, M>::Node &u) {
-	LCTree<T, A, M>::setRoot(u.p);
+	this -> setRoot(u.p);
 }
 
 template<class T, class A, class M>
@@ -34,27 +34,27 @@ void Forest<T, A, M>::link(const Forest<T, A, M>::Node &u, const Forest<T, A, M>
 
 template<class T, class A, class M>
 void Forest<T, A, M>::cut(const Forest<T, A, M>::Node &u, const Forest<T, A, M>::Node &v) {
-	LCTree<T, A, M>::cut(u.p, v.p);
+	this -> cut(u.p, v.p);
 }
 
 template<class T, class A, class M>
 void Forest<T, A, M>::modify(const Forest<T, A, M>::Node &u, const Forest<T, A, M>::Node &v, const T &value) {
-	modifyChain(u.p, v.p, value);
+	this -> modifyChain(u.p, v.p, value);
 }
 
 template<class T, class A, class M>
 void Forest<T, A, M>::modify(const Forest<T, A, M>::Node &u, const T &value) {
-	modifySubTree(u.p, value);
+	this -> modifySubTree(u.p, value);
 }
 
 template<class T, class A, class M>
 T Forest<T, A, M>::query(const Forest<T, A, M>::Node &u, const Forest<T, A, M>::Node &v) {
-	return queryChain(u.p, v.p);
+	return this -> queryChain(u.p, v.p);
 }
 
 template<class T, class A, class M>
 T Forest<T, A, M>::query(const Forest<T, A, M>::Node &u) {
-	return queryChain(u.p);
+	return this -> queryChain(u.p);
 }
 
 #endif

@@ -30,7 +30,7 @@ void AuxTree<T, A, M> :: RR(AuxNode<T, A, M>* &t){
 template<class T, class A, class M>
 AuxNode<T, A, M>* AuxTree<T, A, M> :: Treap_find(const int &key, AuxNode<T, A, M>* t) {
 	if(t == NULL) return NULL;
-	t -> pushdown();
+	t -> pushTagTree();
 	if(key < (t -> data -> id)) return Treap_find(key, t -> child[0]); else
 	if(key > (t -> data -> id)) return Treap_find(key, t -> child[1]); else
 	return t;
@@ -82,12 +82,12 @@ void AuxTree<T, A, M> :: Treap_Delete(const AuxNode<T, A, M> &rhs, AuxNode<T, A,
 			if((t -> child[0] -> getrand()) < (t -> child[1] -> getrand())){
 				RR(t); 
 				Treap_Delete(rhs, t -> child[1]);
-				update(t);
+				t -> update();
 			}
 			else{
 				LL(t);
 				Treap_Delete(rhs, t -> child[0]);
-				update(t);
+				t -> update();
 			}
 		}
 		return;
@@ -96,7 +96,7 @@ void AuxTree<T, A, M> :: Treap_Delete(const AuxNode<T, A, M> &rhs, AuxNode<T, A,
 		Treap_Delete(rhs, t -> child[0]);
 	else 
 		Treap_Delete(rhs, t -> child[1]);
-	update(t);
+	t -> update();
 }
 
 template<class T, class A, class M>

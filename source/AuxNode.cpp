@@ -9,10 +9,10 @@ void AuxNode<T, A, M>::makeTagTree(const T &value) {
 		tagTree = value;
 		haveTagTree = true;
 	} else {
-		tagTree = add(tagTree, value);
+		tagTree = this -> add(tagTree, value);
 	}
 	data -> makeTagTree(value);
-	sum = add(sum, mult(size, value));
+	sum = this -> add(sum, this -> mult(size, value));
 }
 
 template<class T, class A, class M>
@@ -20,10 +20,10 @@ void AuxNode<T, A, M>::pushTagTree() {
 	if (haveTagTree) {
 		haveTagTree = false;
 		if (child[0] != nullptr) {
-			child[0] -> makeDelta(tagTree);
+			child[0] -> makeTagTree(tagTree);
 		}
 		if (child[1] != nullptr) {
-			child[1] -> makeDelta(tagTree);
+			child[1] -> makeTagTree(tagTree);
 		}
 	}
 }
@@ -34,11 +34,11 @@ void AuxNode<T, A, M>::update() {
 	sum = data -> sumTree;
 	if (child[0] != nullptr) {
 		size += child[0] -> size;
-		sum = add(sum, child[0] -> sum);
+		sum = this -> add(sum, child[0] -> sum);
 	}
 	if (child[1] != nullptr) {
 		size += child[1] -> size;
-		sum = add(sum, child[1] -> sum);
+		sum = this -> add(sum, child[1] -> sum);
 	}
 }
 

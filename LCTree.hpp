@@ -1,6 +1,7 @@
 #ifndef SJTU_LCTREE_HPP
 #define SJTU_LCTREE_HPP
 
+#include <cassert>
 #include "TBase.hpp"
 #include "LCTNode.hpp"
 
@@ -10,9 +11,9 @@ template<class T, class A, class M>
 class LCTree : public TBase<T, A, M>{
 private:
 	LCTNode<T, A, M>* access(LCTNode<T, A, M> *u);
-	void add(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v);
-	void del(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v);
-	void isSplayRoot(LCTNode<T, A, M> *u);
+	static void add(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v);
+	static void del(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v);
+	static bool isSplayRoot(LCTNode<T, A, M> *u);
 
 protected:
 	static void rotate(LCTNode<T, A, M> *u, int c);
@@ -36,12 +37,14 @@ template<class T, class A, class M>
 void LCTree<T, A, M>::add(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v) {
 	if (u == nullptr || v == nullptr) return;
 	(u -> subtree).insert(AuxNode<T, A, M>(v, rand()));
+	u -> update();
 }
 
 template<class T, class A, class M>
 void LCTree<T, A, M>::del(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v) {
 	if (u == nullptr || v == nullptr) return;
 	(u -> subtree).erase(AuxNode<T, A, M>(v, rand()));
+	u -> update();
 }
 
 template<class T, class A, class M>
@@ -52,13 +55,17 @@ void LCTree<T, A, M>::rotate(LCTNode<T, A, M> *u, int c) {
 		u->child[c]->father = v;
 	}
 	u->father = v->father;
-	if (v->father->child[0] == v) {
-		u->father->child[0] = u;
-	} else if (v->father->child[1] == v) {
-		u->father->child[1] = u;
+	if (v->father != nullptr) {
+		if (v->father->child[0] == v) {
+			u->father->child[0] = u;
+		} else if (v->father->child[1] == v) {
+			u->father->child[1] = u;
+		}
 	}
 	v->father = u;
 	u->child[c] = v;
+	v->update();
+	u->update();
 }
 
 template<class T, class A, class M>
@@ -80,21 +87,21 @@ LCTNode<T, A, M>* LCTree<T, A, M>::getSplayRoot(LCTNode<T, A, M> *u) {
 }
 
 template<class T, class A, class M>
-void LCTree<T, A, M>::isSplayRoot(LCTNode<T, A, M> *u) {
+bool LCTree<T, A, M>::isSplayRoot(LCTNode<T, A, M> *u) {
 	return u->father == nullptr || (u->father->child[0] != u && u->father->child[1] != u);
 }
 
 template<class T, class A, class M>
 void LCTree<T, A, M>::splay(LCTNode<T, A, M> *u) {
 	LCTNode<T, A, M> * uRoot = LCTree<T, A, M>::getSplayRoot(u);
+	LCTNode<T, A, M> * tmp = uRoot -> father;
 	del(uRoot->father, uRoot);
-	
-	u->clearTag();
+	u->pushTagChain();
 	while (!isSplayRoot(u)) {
 		LCTNode<T, A, M> *v = u->father;
 		if (isSplayRoot(v)) {
-			v->clearTag();
-			u->clearTag();
+			v->pushTagChain();
+			u->pushTagChain();
 			if (v->child[0] == u) {
 				LCTree<T, A, M>::zig(u);
 			} else {
@@ -102,9 +109,9 @@ void LCTree<T, A, M>::splay(LCTNode<T, A, M> *u) {
 			}
 		} else {
 			LCTNode<T, A, M> *w = v->father;
-			w->clearTag();
-			v->clearTag();
-			u->clearTag();
+			w->pushTagChain();
+			v->pushTagChain();
+			u->pushTagChain();
 			if (w->child[0] == v) {
 				if (v->child[0] == u) {
 					LCTree<T, A, M>::zig(v);
@@ -124,7 +131,8 @@ void LCTree<T, A, M>::splay(LCTNode<T, A, M> *u) {
 			}
 		}
 	}
-	LCTree<T, A, M>::update(u);
+	u->update();
+	assert(u->father == tmp);
 	add(u->father, u);
 }
 
@@ -176,7 +184,7 @@ void LCTree<T, A, M>::cut(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v) {
 
 template<class T, class A, class M>
 void LCTree<T, A, M>::modifyChain(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v, const T &value) { 
-	LCTNode<T, A, M> tmp = LCTree<T, A, M>::setRoot(u);
+	LCTNode<T, A, M> * tmp = LCTree<T, A, M>::setRoot(u);
 	LCTree<T, A, M>::access(v);
 	LCTree<T, A, M>::splay(v);
 	v->makeTagChain(value);
@@ -187,7 +195,7 @@ void LCTree<T, A, M>::modifyChain(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v, cons
 
 template<class T, class A, class M>
 T LCTree<T, A, M>::queryChain(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v) {
-	LCTNode<T, A, M> tmp = LCTree<T, A, M>::setRoot(u);
+	LCTNode<T, A, M> * tmp = LCTree<T, A, M>::setRoot(u);
 	LCTree<T, A, M>::access(v);
 	LCTree<T, A, M>::splay(v);
 	T ret = v->sumChain;

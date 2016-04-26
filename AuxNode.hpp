@@ -9,8 +9,12 @@ template<class T, class A, class M>
 class AuxTree;
 
 template<class T, class A, class M>
+class LCTNode;
+
+template<class T, class A, class M>
 class AuxNode : TNode<T, A, M>{
 friend class AuxTree<T, A, M>;
+friend class LCTNode<T, A, M>;
 private:
 	int rnd;
 	T tagTree, sum;
@@ -23,8 +27,11 @@ private:
 public:
 	void pushTagTree();
 	void update();
-	AuxNode(LCTNode<T, A, M> *data, int Rnd) : TNode<T, A, M>(), tagTree(), data(data), rnd(Rnd) {
-		child[0] = child[1] = nullptr;
+	AuxNode(LCTNode<T, A, M> *data, int Rnd) : tagTree(), size(0), 
+	                                           sum(), data(data), rnd(Rnd)
+	{
+		father = child[0] = child[1] = nullptr;
+		haveTagTree = false;
 	}
 	int getrand() const {return rnd;}
 
