@@ -1,7 +1,8 @@
 #ifndef SJTU_LCTREE_HPP
 #define SJTU_LCTREE_HPP
 
-#include <cassert>
+#include <vector>
+#include <algorithm>
 #include "TBase.hpp"
 #include "LCTNode.hpp"
 
@@ -11,8 +12,8 @@ template<class T, class A, class M>
 class LCTree : public TBase<T, A, M>{
 private:
 	LCTNode<T, A, M>* access(LCTNode<T, A, M> *u);
-	static void add(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v);
-	static void del(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v);
+	static void insert(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v);
+	static void remove(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v);
 	static bool isSplayRoot(LCTNode<T, A, M> *u);
 
 protected:
@@ -26,7 +27,7 @@ protected:
 	void modifyChain(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v, const T &value);
 	T queryChain(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v);
 	void modifySubtree(LCTNode<T, A, M> *u, const T &value);
-	void querySubtree(LCTNode<T, A, M> *u);
+	T querySubtree(LCTNode<T, A, M> *u);
 	LCTNode<T, A, M> * setRoot(LCTNode<T, A, M> *u);
 
 };
@@ -34,14 +35,14 @@ protected:
 #include "source/LCTree.cpp"
 
 template<class T, class A, class M>
-void LCTree<T, A, M>::add(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v) {
+void LCTree<T, A, M>::insert(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v) {
 	if (u == nullptr || v == nullptr) return;
 	(u -> subtree).insert(AuxNode<T, A, M>(v, rand()));
 	u -> update();
 }
 
 template<class T, class A, class M>
-void LCTree<T, A, M>::del(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v) {
+void LCTree<T, A, M>::remove(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v) {
 	if (u == nullptr || v == nullptr) return;
 	(u -> subtree).erase(AuxNode<T, A, M>(v, rand()));
 	u -> update();
@@ -95,7 +96,7 @@ template<class T, class A, class M>
 void LCTree<T, A, M>::splay(LCTNode<T, A, M> *u) {
 	LCTNode<T, A, M> * uRoot = LCTree<T, A, M>::getSplayRoot(u);
 	LCTNode<T, A, M> * tmp = uRoot -> father;
-	del(uRoot->father, uRoot);
+	remove(uRoot->father, uRoot);
 	u->pushTagChain();
 	while (!isSplayRoot(u)) {
 		LCTNode<T, A, M> *v = u->father;
@@ -132,13 +133,13 @@ void LCTree<T, A, M>::splay(LCTNode<T, A, M> *u) {
 		}
 	}
 	u->update();
-	assert(u->father == tmp);
-	add(u->father, u);
+	insert(u->father, u);
 }
 
 template<class T, class A, class M>
 LCTNode<T, A, M>* LCTree<T, A, M>::access(LCTNode<T, A, M> *u) {
-	std::vector<LCTNode<T, A, M>*> vec;
+	static std::vector<LCTNode<T, A, M>*> vec;
+	vec.clear();
 	LCTNode<T, A, M> *step = u;
 	while (step != nullptr) {
 		vec.push_back(step);
@@ -147,13 +148,15 @@ LCTNode<T, A, M>* LCTree<T, A, M>::access(LCTNode<T, A, M> *u) {
 	std::reverse(vec.begin(), vec.end());
 	for (auto p : vec) {
 		p->update();
+		p->pushTagTree();
+		p->pushTagChain();
 	}
 	
 	LCTNode<T, A, M>* v = nullptr;
 	for ( ; u != nullptr; u = u->father) {
 		LCTree<T, A, M>::splay(u);
-		LCTree<T, A, M>::del(u, v);
-		LCTree<T, A, M>::add(u, u->child[1]);
+		LCTree<T, A, M>::remove(u, v);
+		LCTree<T, A, M>::insert(u, u->child[1]);
 		
 		u->child[1] = v;
 		v = u;
@@ -170,7 +173,7 @@ LCTNode<T, A, M> * LCTree<T, A, M>::setRoot(LCTNode<T, A, M> *u) {
 	while (p -> child[0] != nullptr) {
 		p = p -> child[0];
 	}
-	tmp->reverse ^= true;
+	u->reverse ^= true;
 	LCTree<T, A, M>::splay(u);
 	return p;
 }
@@ -179,7 +182,7 @@ template<class T, class A, class M>
 void LCTree<T, A, M>::link(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v) {
 	LCTree<T, A, M>::setRoot(u);
 	u->father = v;
-	add(v, u);
+	insert(v, u);
 	LCTree<T, A, M>::access(u);
 }
 
@@ -219,17 +222,18 @@ void LCTree<T, A, M>::modifySubtree(LCTNode<T, A, M> *u, const T &value) {
 	LCTree<T, A, M>::access(u);
 	LCTree<T, A, M>::splay(u);
 	u->makeTagTree(value);
-	u->pushTagTree(value);
-	u->pushTagChain(value);
+	u->pushTagTree();
+	u->pushTagChain();
+	u->data = this -> add(u -> data, value);
 	u->update();
 	LCTree<T, A, M>::splay(u);
 }
 
 template<class T, class A, class M>
-void LCTree<T, A, M>::querySubtree(LCTNode<T, A, M> *u) {
+T LCTree<T, A, M>::querySubtree(LCTNode<T, A, M> *u) {
 	LCTree<T, A, M>::access(u);
 	LCTree<T, A, M>::splay(u);
-	return add(u->sumTree, u->data);
+	return this -> add(u->subtree.getSum(), u->data);
 }
 
 }

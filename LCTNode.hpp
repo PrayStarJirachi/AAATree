@@ -117,15 +117,15 @@ void LCTNode<T, A, M>::update() {
 	sumChain = data;
 	if (child[0] != nullptr) {
 		sumChain = this -> add(sumChain, child[0] -> sumChain);
-		sumTree = this -> add(sumTree, child[0] -> sumTree);
 		sizeChain += child[0] -> sizeChain;
 		sizeTree += child[0] -> sizeTree;
+		sumTree = this -> add(sumTree, child[0] -> sumTree);
 	}
 	if (child[1] != nullptr) {
 		sumChain = this -> add(sumChain, child[1] -> sumChain);
-		sumTree = this -> add(sumTree, child[1] -> sumTree);
 		sizeChain += child[1] -> sizeChain;
 		sizeTree += child[1] -> sizeTree;
+		sumTree = this -> add(sumTree, child[1] -> sumTree);
 	}
 }
 

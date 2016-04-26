@@ -46,6 +46,7 @@ template<class T, class A, class M>
 void AuxTree<T, A, M> :: Treap_Insert(const AuxNode<T, A, M> &rhs, AuxNode<T, A, M>* &t) {
 	if(t == NULL){
 		t = new AuxNode<T, A, M>(rhs.data, rand());
+		t -> update();
 		return;
 	}
 	t -> pushTagTree();

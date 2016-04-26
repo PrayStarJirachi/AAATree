@@ -1,0 +1,7 @@
+10
+19 53 68 80 63 88 98 1 0 80
+link 5 2
+modifySubtree 2 5 21
+link 7 2
+modifySubtree 5 5 65
+querySubtree 7 7

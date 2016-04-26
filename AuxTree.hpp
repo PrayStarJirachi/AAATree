@@ -21,8 +21,7 @@ private:
 	void Treap_Delete(const AuxNode<T, A, M> &rhs, AuxNode<T, A, M>* &t);
 	void Treap_Clear(const AuxNode<T, A, M>* t);
 	
-public:
-	
+public:	
 	AuxTree() : root(nullptr), size(0) {}
 	AuxNode<T, A, M>* find(const AuxNode<T, A, M> &rhs);
 	void insert(const AuxNode<T, A, M> &rhs);

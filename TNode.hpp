@@ -6,22 +6,12 @@
 namespace sjtu{
 
 template<class T, class A, class M>
-class TNode{
-protected:
-	static A add;
-	static M mult;
-
+class TNode : public TBase<T, A, M>{
 public:
 	TNode();
 	virtual ~TNode();
 
 };
-
-template<class T, class A, class M>
-A TNode<T, A, M>::add;
-
-template<class T, class A, class M>
-M TNode<T, A, M>::mult;
 
 #include "source/TNode.cpp"
 
