@@ -33,9 +33,9 @@ del(u, v) {
 template<class T, class A, class M>
 void LCTree<T, A, M>::rotate(LCTNode<T, A, M> *u, int c) {
 	LCTNode<T, A, M> *v = u->father;
-	v->child[c ^ 1] = u->child[c];
-	if (u->child[c] != nullptr) {
-		u->child[c]->father = v;
+	v->child[c] = u->child[c ^ 1];
+	if (u->child[c ^ 1] != nullptr) {
+		u->child[c ^ 1]->father = v;
 	}
 	u->father = v->father;
 	if (v->father->child[0] == v) {
@@ -44,7 +44,9 @@ void LCTree<T, A, M>::rotate(LCTNode<T, A, M> *u, int c) {
 		u->father->child[1] = u;
 	}
 	v->father = u;
-	u->child[c] = v;
+	u->child[c ^ 1] = v;
+	v->update();
+	u->update();
 }
 
 
