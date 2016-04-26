@@ -114,6 +114,17 @@ void LCTree<T, A, M>::splay(LCTNode<T, A, M> *u) {
 
 template<class T, class A, class M>
 LCTNode<T, A, M>* LCTree<T, A, M>::access(LCTNode<T, A, M> *u) {
+	std::vector<LCTNode<T, A, M>*> vec;
+	LCTNode<T, A, M> *step = u;
+	while (step != nullptr) {
+		vec.push_back(step);
+		step = step->father;
+	}
+	std::reverse(vec.begin(), vec.end());
+	for (auto p : vec) {
+		p->update();
+	}
+	
 	LCTNode<T, A, M>* v = nullptr;
 	for ( ; u != nullptr; u = u->father) {
 		LCTree<T, A, M>::splay(u);
