@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 
-const int MAXN = 100001;
-const int MAXM = 200001;
+const int MAXN = 200001;
+const int MAXM = 400001;
 
 int n, m, t, h[MAXN], f[MAXN], d[MAXN], w[MAXN], s[MAXN], p[MAXN];
 std::vector<int> g[MAXN];
@@ -12,6 +12,7 @@ int bfs(int x) {
 	int left = 0, right = 0, ret = 0;
 	d[x] = w[x];
 	p[x] = 0;
+	std::fill(v + 1, v + n + 1, false);
 	v[q[++right] = x] = true;
 	while (left < right) {
 		left++;
@@ -54,6 +55,7 @@ int main() {
 	for (int i = 1; i <= n; i++) {
 		scanf("%d", w + i);
 	}
+	int cnt = 0;
 	while (true) {
 		char op[20];
 		if (scanf("%s", op) != 1) {

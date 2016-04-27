@@ -28,6 +28,7 @@ private:
 
 	void makeTagChain(const T &value);
 	void makeTagTree(const T &value);
+	void makeSwap();
 
 public:
 	const size_t id;
@@ -71,19 +72,26 @@ void LCTNode<T, A, M>::makeTagTree(const T &value) {
 	} else {
 		tagTree = this -> add(tagTree, value);
 	}
-	sumTree = this -> add(sumTree, this -> mult(sizeTree + sizeChain, value));
+	data = this -> add(data, value);
+	sumChain = this -> add(sumChain, value);
+	sumTree = this -> add(sumTree, this -> mult(sizeTree, value));
 	subtree.makeDelta(value);
+}
+
+template<class T, class A, class M>
+void LCTNode<T, A, M>::makeSwap() {
+	reverse ^= 1;
+	std::swap(child[0], child[1]);
 }
 
 template<class T, class A, class M>
 void LCTNode<T, A, M>::pushTagChain() {
 	if (reverse) {
-		std::swap(child[0], child[1]);
 		if (child[0] != nullptr) {
-			child[0] -> reverse ^= 1;
+			child[0] -> makeSwap();
 		}
 		if (child[1] != nullptr) {
-			child[1] -> reverse ^= 1;
+			child[1] -> makeSwap();
 		}
 		reverse = false;
 	}
@@ -96,12 +104,43 @@ void LCTNode<T, A, M>::pushTagChain() {
 		}
 		haveTagChain = false;
 	}
+	if (haveTagTree) {
+		//subtree.makeDelta(tagTree);
+		if (child[0] != nullptr) {
+			child[0] -> makeTagTree(tagTree);
+		}
+		if (child[1] != nullptr) {
+			child[1] -> makeTagTree(tagTree);
+		}
+		haveTagTree = false;
+	}
 }
 
 template<class T, class A, class M>
 void LCTNode<T, A, M>::pushTagTree() {
+	if (reverse) {
+		if (child[0] != nullptr) {
+			child[0] -> makeSwap();
+		}
+		if (child[1] != nullptr) {
+			child[1] -> makeSwap();
+		}
+		reverse = false;
+	}
+	if (haveTagChain) {
+		if (child[0] != nullptr) {
+			child[0] -> makeTagChain(tagChain);
+		}
+		if (child[1] != nullptr) {
+			child[1] -> makeTagChain(tagChain);
+		}
+		haveTagChain = false;
+	}
 	if (haveTagTree) {
-		subtree.makeDelta(tagTree);
+		//subtree.makeDelta(tagTree);
+		if (child[0] != nullptr) {
+			child[0] -> makeTagTree(tagTree);
+		}
 		if (child[1] != nullptr) {
 			child[1] -> makeTagTree(tagTree);
 		}

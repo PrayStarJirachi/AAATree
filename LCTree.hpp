@@ -98,11 +98,14 @@ void LCTree<T, A, M>::splay(LCTNode<T, A, M> *u) {
 	LCTNode<T, A, M> * tmp = uRoot -> father;
 	remove(uRoot->father, uRoot);
 	u->pushTagChain();
+	u->pushTagTree();
 	while (!isSplayRoot(u)) {
 		LCTNode<T, A, M> *v = u->father;
 		if (isSplayRoot(v)) {
 			v->pushTagChain();
+			v->pushTagTree();
 			u->pushTagChain();
+			u->pushTagTree();
 			if (v->child[0] == u) {
 				LCTree<T, A, M>::zig(u);
 			} else {
@@ -111,8 +114,11 @@ void LCTree<T, A, M>::splay(LCTNode<T, A, M> *u) {
 		} else {
 			LCTNode<T, A, M> *w = v->father;
 			w->pushTagChain();
+			w->pushTagTree();
 			v->pushTagChain();
+			v->pushTagTree();
 			u->pushTagChain();
+			u->pushTagTree();
 			if (w->child[0] == v) {
 				if (v->child[0] == u) {
 					LCTree<T, A, M>::zig(v);
@@ -147,9 +153,9 @@ LCTNode<T, A, M>* LCTree<T, A, M>::access(LCTNode<T, A, M> *u) {
 	}
 	std::reverse(vec.begin(), vec.end());
 	for (auto p : vec) {
-		p->update();
 		p->pushTagTree();
 		p->pushTagChain();
+		p->update();
 	}
 	
 	LCTNode<T, A, M>* v = nullptr;
@@ -157,7 +163,10 @@ LCTNode<T, A, M>* LCTree<T, A, M>::access(LCTNode<T, A, M> *u) {
 		LCTree<T, A, M>::splay(u);
 		LCTree<T, A, M>::remove(u, v);
 		LCTree<T, A, M>::insert(u, u->child[1]);
-		
+		if (v != nullptr) {
+			v->pushTagTree();
+			v->pushTagChain();
+		}	
 		u->child[1] = v;
 		v = u;
 		v->update();
@@ -173,7 +182,7 @@ LCTNode<T, A, M> * LCTree<T, A, M>::setRoot(LCTNode<T, A, M> *u) {
 	while (p -> child[0] != nullptr) {
 		p = p -> child[0];
 	}
-	u->reverse ^= true;
+	u->makeSwap();
 	LCTree<T, A, M>::splay(u);
 	return p;
 }
@@ -198,33 +207,35 @@ void LCTree<T, A, M>::cut(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v) {
 
 template<class T, class A, class M>
 void LCTree<T, A, M>::modifyChain(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v, const T &value) { 
-	LCTNode<T, A, M> * tmp = LCTree<T, A, M>::setRoot(u);
+	LCTree<T, A, M>::setRoot(u);
 	LCTree<T, A, M>::access(v);
 	LCTree<T, A, M>::splay(v);
 	v->makeTagChain(value);
-	LCTree<T, A, M>::setRoot(tmp);
 	v->pushTagChain();
 	v->pushTagTree();
 }
 
 template<class T, class A, class M>
 T LCTree<T, A, M>::queryChain(LCTNode<T, A, M> *u, LCTNode<T, A, M> *v) {
-	LCTNode<T, A, M> * tmp = LCTree<T, A, M>::setRoot(u);
+	LCTree<T, A, M>::setRoot(u);
 	LCTree<T, A, M>::access(v);
 	LCTree<T, A, M>::splay(v);
-	T ret = v->sumChain;
-	LCTree<T, A, M>::setRoot(tmp);
-	return ret;
+	return v->sumChain;
 }
 
 template<class T, class A, class M>
 void LCTree<T, A, M>::modifySubtree(LCTNode<T, A, M> *u, const T &value) {
 	LCTree<T, A, M>::access(u);
 	LCTree<T, A, M>::splay(u);
+	LCTNode<T, A, M> *v = u -> child[0];
+	if (v != nullptr) {
+		for (; v -> child[1]; v = v -> child[1]);
+		LCTree<T, A, M>::access(v);
+		LCTree<T, A, M>::splay(u);
+	}
 	u->makeTagTree(value);
 	u->pushTagTree();
 	u->pushTagChain();
-	u->data = this -> add(u -> data, value);
 	u->update();
 	LCTree<T, A, M>::splay(u);
 }

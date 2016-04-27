@@ -30,7 +30,7 @@ void AuxNode<T, A, M>::pushTagTree() {
 
 template<class T, class A, class M>
 void AuxNode<T, A, M>::update() {
-	size = 1;
+	size = data -> sizeTree + data -> sizeChain;
 	sum = this -> add(data -> sumTree, data -> sumChain);
 	if (child[0] != nullptr) {
 		size += child[0] -> size;
