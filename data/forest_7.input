@@ -1,0 +1,13 @@
+5
+98 80 68 27 72
+link 1 2
+link 2 3
+link 3 4
+link 4 5
+querySubtree 1 1
+modifySubtree 5 1 1
+modifySubtree 2 5 91
+querySubtree 1 1
+modifyChain 1 1 30
+queryChain 1 5
+modifySubtree 2 5 10

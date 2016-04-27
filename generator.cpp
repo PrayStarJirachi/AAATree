@@ -61,18 +61,15 @@ int main() {
 	long reed;
 	srand(reed = time(NULL));
 	std::cerr << "Reed = " << reed << std::endl;
-	n = 10, m = 20000;
+	n = 10, m = 100000;
 	FILE *outdat = fopen("forest.input", "w");
 	FILE *outans = fopen("forest.answer", "w");
 	fprintf(outdat, "%d\n", n);
 	for (int i = 1; i <= n; i++) {
 		fprintf(outdat, "%d%c", w[i] = rand() % 100, " \n"[i == n]);
 	}
-	for (int i = 2; i <= n; i++) {
-		fprintf(outdat, "link %d %d\n", f[i] = rand() % (i - 1) + 1, i);
-	}
 	for (int i = 1; i <= m; i++) {
-		int op = rand() % 3;
+		int op = rand() % 5;
 		if (op == 4) {
 			int x = rand() % (n - 1) + 2;
 			int y = rand() % (x - 1) + 1;
@@ -84,19 +81,23 @@ int main() {
 			fprintf(outans, "%d\n", d[y]);
 		} else if (op == 1) {
 			int x = rand() % n + 1, y;
-			fprintf(outdat, "querySubtree %d %d\n", 1, y = bfs(x));
+			fprintf(outdat, "querySubtree %d %d\n", x, y = bfs(x));
 			fa[x] = 0;
 			dfs(x);
 			fprintf(outans, "%d\n", s[y]);
 		} else if (op == 0) {
 			int x = rand() % n + 1, y, value;
-			fprintf(outdat, "modifyChain %d %d %d\n", 1, y = bfs(x), value = rand() % 100);
+			fprintf(outdat, "modifyChain %d %d %d\n", x, y = bfs(x), value = rand() % 100);
 			for (int j = y; j; j = p[j]) {
 				w[j] += value;
 			}
 		} else if (op == 3) {
 			int x = rand() % n + 1, y, value = rand() % 100;
 			fprintf(outdat, "modifySubtree %d %d %d\n", x, y = bfs(x), value);
+			std::fill(h + 1, h + n + 1, t = 0);
+			for (int j = 1; j <= n; j++) {
+				if (f[j]) addEdge(j, f[j]);
+			}
 			fa[x] = 0;
 			dfs(x);
 			modify(y, value);

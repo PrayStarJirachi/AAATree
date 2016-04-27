@@ -227,13 +227,8 @@ template<class T, class A, class M>
 void LCTree<T, A, M>::modifySubtree(LCTNode<T, A, M> *u, const T &value) {
 	LCTree<T, A, M>::access(u);
 	LCTree<T, A, M>::splay(u);
-	LCTNode<T, A, M> *v = u -> child[0];
-	if (v != nullptr) {
-		for (; v -> child[1]; v = v -> child[1]);
-		LCTree<T, A, M>::access(v);
-		LCTree<T, A, M>::splay(u);
-	}
-	u->makeTagTree(value);
+	u->subtree.makeDelta(value);
+	u->data = this -> add(u -> data, value);
 	u->pushTagTree();
 	u->pushTagChain();
 	u->update();

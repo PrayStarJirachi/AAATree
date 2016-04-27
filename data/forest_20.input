@@ -1,0 +1,26 @@
+5
+35 90 11 35 30
+link 1 2
+link 2 3
+link 3 4
+link 4 5
+modifyChain 1 1 99
+modifySubtree 5 1 90
+querySubtree 1 1
+modifySubtree 5 1 32
+querySubtree 1 1
+modifyChain 1 1 72
+modifySubtree 3 1 84
+modifySubtree 2 5 69
+querySubtree 1 1
+queryChain 4 1
+queryChain 3 1
+queryChain 4 1
+modifySubtree 3 1 84
+modifyChain 1 5 64
+modifySubtree 1 5 95
+querySubtree 1 5
+modifySubtree 1 5 21
+modifyChain 1 5 17
+queryChain 4 1
+modifySubtree 1 5 31

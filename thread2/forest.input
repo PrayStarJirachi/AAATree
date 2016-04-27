@@ -1,0 +1,26 @@
+5
+70 97 76 89 47
+link 1 2
+link 1 3
+link 2 4
+link 4 5
+querySubtree 1 5
+querySubtree 1 3
+modifyChain 1 3 88
+modifySubtree 3 5 75
+modifyChain 1 3 64
+queryChain 3 5
+querySubtree 1 5
+queryChain 2 3
+querySubtree 1 3
+modifyChain 1 3 53
+queryChain 1 5
+querySubtree 1 5
+queryChain 5 3
+modifySubtree 2 3 20
+modifyChain 1 3 66
+modifyChain 1 5 58
+modifySubtree 2 3 83
+querySubtree 1 5
+modifySubtree 4 3 68
+querySubtree 1 5

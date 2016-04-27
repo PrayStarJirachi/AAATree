@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 
-const int MAXN = 200001;
-const int MAXM = 400001;
+const int MAXN = 100001;
+const int MAXM = 200001;
 
 int n, m, t, h[MAXN], f[MAXN], d[MAXN], w[MAXN], s[MAXN], p[MAXN];
 std::vector<int> g[MAXN];
@@ -48,7 +48,6 @@ void modify(int x, int value) {
 
 int main() {
 	srand(time(NULL));
-	n = 10, m = 10;
 	freopen("forest.input", "r", stdin);
 	freopen("forest.standard", "w", stdout);
 	scanf("%d", &n);

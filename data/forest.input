@@ -1,0 +1,106 @@
+5
+26 6 80 78 89
+link 1 2
+link 2 3
+link 3 4
+link 4 5
+queryChain 5 1
+queryChain 4 1
+modifyChain 1 1 26
+modifyChain 1 1 20
+modifySubtree 4 1 98
+querySubtree 1 1
+querySubtree 1 1
+modifyChain 1 1 55
+querySubtree 1 1
+querySubtree 1 1
+querySubtree 1 1
+modifyChain 1 5 30
+modifyChain 1 5 17
+queryChain 3 1
+modifyChain 1 1 42
+querySubtree 1 1
+modifyChain 1 1 58
+queryChain 2 5
+modifySubtree 3 1 85
+querySubtree 1 1
+queryChain 4 1
+queryChain 2 5
+modifySubtree 3 1 23
+queryChain 1 5
+queryChain 1 5
+queryChain 4 1
+querySubtree 1 1
+modifyChain 1 5 56
+querySubtree 1 5
+modifySubtree 1 5 85
+querySubtree 1 5
+modifyChain 1 1 28
+queryChain 3 1
+queryChain 3 1
+modifySubtree 5 1 79
+queryChain 3 1
+modifyChain 1 1 98
+queryChain 3 1
+queryChain 2 5
+modifyChain 1 1 86
+modifyChain 1 5 74
+modifySubtree 3 1 70
+querySubtree 1 5
+queryChain 5 1
+modifyChain 1 1 69
+querySubtree 1 5
+querySubtree 1 1
+modifyChain 1 5 8
+querySubtree 1 5
+queryChain 4 1
+queryChain 5 1
+modifyChain 1 1 68
+modifyChain 1 1 99
+modifySubtree 2 5 34
+queryChain 3 1
+modifyChain 1 5 65
+querySubtree 1 1
+modifyChain 1 5 60
+queryChain 5 1
+modifySubtree 5 1 80
+modifyChain 1 1 67
+querySubtree 1 1
+querySubtree 1 5
+modifySubtree 1 5 24
+modifyChain 1 5 10
+queryChain 4 1
+querySubtree 1 5
+querySubtree 1 5
+modifyChain 1 5 67
+modifySubtree 1 5 13
+modifyChain 1 1 31
+modifyChain 1 1 62
+modifyChain 1 1 65
+querySubtree 1 1
+queryChain 2 5
+modifyChain 1 5 27
+modifySubtree 1 5 50
+modifySubtree 1 5 46
+querySubtree 1 1
+modifySubtree 4 1 64
+queryChain 1 5
+querySubtree 1 1
+queryChain 5 1
+modifyChain 1 1 46
+modifyChain 1 1 23
+modifyChain 1 5 96
+modifySubtree 4 1 35
+querySubtree 1 5
+querySubtree 1 1
+querySubtree 1 1
+modifyChain 1 1 54
+modifyChain 1 1 19
+queryChain 1 5
+queryChain 1 5
+modifySubtree 5 1 68
+queryChain 3 1
+modifySubtree 3 1 83
+modifySubtree 5 1 39
+querySubtree 1 1
+querySubtree 1 1
