@@ -8,18 +8,28 @@ Forest<T, A, M>::Forest() : size(0) {
 }
 
 template<class T, class A, class M>
-Forest<T, A, M>::~Forest() {
-	// TODO
+void Forest<T, A, M>::allocate(Node &x) {
+	if (x.p != nullptr) {
+		delete x.p;
+	}
+	x.p = new LCTNode<T, A, M>(++size, T());
 }
 
 template<class T, class A, class M>
-Forest<T, A, M>::Node::Node(LCTNode<T, A, M> *rhs) : p(rhs) {
+void Forest<T, A, M>::allocate(Node &x, const T &value) {
+	if (x.p != nullptr) {
+		delete x.p;
+	}
+	x.p = new LCTNode<T, A, M>(++size, value);
 }
 
 template<class T, class A, class M>
-typename Forest<T, A, M>::Node Forest<T, A, M>::createTree(const T &value) {
-	LCTNode<T, A, M> *ret = new LCTNode<T, A, M>(++size, value);
-	return Forest<T, A, M>::Node(ret);
+Forest<T, A, M>::Node::Node() : p(nullptr) {
+}
+
+template<class T, class A, class M>
+Forest<T, A, M>::Node::~Node() {
+	delete p;
 }
 
 template<class T, class A, class M>

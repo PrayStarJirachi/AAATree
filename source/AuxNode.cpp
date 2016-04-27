@@ -29,6 +29,17 @@ void AuxNode<T, A, M>::pushTagTree() {
 }
 
 template<class T, class A, class M>
+AuxNode<T, A, M>::AuxNode(LCTNode<T, A, M> *data, int Rnd) : tagTree(), size(0), sum(), data(data), rnd(Rnd) {
+	father = child[0] = child[1] = nullptr;
+	haveTagTree = false;
+}
+
+template<class T, class A, class M>
+inline int AuxNode<T, A, M>::getrand()const {
+	return rnd;
+}
+
+template<class T, class A, class M>
 void AuxNode<T, A, M>::update() {
 	size = data -> sizeTree + data -> sizeChain;
 	sum = this -> add(data -> sumTree, data -> sumChain);

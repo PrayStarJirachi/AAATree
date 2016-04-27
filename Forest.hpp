@@ -17,14 +17,21 @@ public:
 		LCTNode<T, A, M> *p;
 	
 	public:
-		explicit Node(LCTNode<T, A, M> *rhs = nullptr);
+		Node();
+		Node(const Node &p) = default;
+		Node & operator =(const Node &p) = default;
+
+		void allocate();
+		void allocate(const T &value = T());
+
+		~Node();
 
 	};
 
 	Forest();
-	~Forest();
 
-	Node createTree(const T &value);
+	void allocate(Node &x);
+	void allocate(Node &x, const T &value);
 	void setRoot(const Node &u);
 	void modify(const Node &u, const Node &v, const T &value);
 	void modify(const Node &u, const T &value);

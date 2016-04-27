@@ -25,15 +25,11 @@ private:
 	void makeTagTree(const T &value);
 
 public:
-	void pushTagTree();
-	void update();
-	AuxNode(LCTNode<T, A, M> *data, int Rnd) : tagTree(), size(0), 
-	                                           sum(), data(data), rnd(Rnd)
-	{
-		father = child[0] = child[1] = nullptr;
-		haveTagTree = false;
-	}
-	int getrand() const {return rnd;}
+	AuxNode(LCTNode<T, A, M> *data, int Rnd);
+
+	inline void pushTagTree();
+	inline void update();
+	inline int getrand()const;
 
 };
 
