@@ -7,7 +7,7 @@
 \usepackage{bm}
 \usepackage{harpoon}
 \usepackage{listings}
-\usepackage[left=1.8cm, right=1.8cm]{geometry}
+\usepackage[left=1.5cm, right=1.5cm]{geometry}
 \usepackage{setspace}
 \usepackage{bm}
 \usepackage{cmap}
@@ -33,14 +33,13 @@
 \newcommand{\kai}{\CJKfamily{KaiTi}}
 
 \allowdisplaybreaks
-
-\oddsidemargin -0.1 true cm
-\if@twoside
-	\evensidemargin -0.1 true cm
-\fi
 \newfontfamily\Courier{Courier New}
-
 \renewcommand{\figurename}{图}
+
+\def\ack{\section*{Acknowledgements}%
+  \addtocontents{toc}{\protect\vspace{6pt}}%
+  \addcontentsline{toc}{section}{Acknowledgements}%
+}
 
 \lstset{
 	language=C++,
@@ -61,7 +60,7 @@
 	\begin{abstract}\kai
 		Self-adjusting Top Tree（简称Top Tree）由Robert E. Tarjan\cite{ref1}发明，这是一种能够在均摊$O(n\log n)$的时间复杂度内支
 	持完全动态树的所有操作的数据结构\cite{ref2}，从而从根本上解决了完全动态树问题。而完全动态树问题在许多算法设计时都会很有作用，
-	例如最大流问题就可以使用Top Tree进行优化。本文将从Top Tree的原理出发，讲述Top Tree的实现以及一些应用，并且给出Top Tree的复杂度证明。
+	例如最大流问题就可以使用Top Tree进行优化。本文将从Top Tree的原理出发，讲述Top Tree的一种不同的实现方式。
 	\end{abstract}
 	\tableofcontents
     \newpage
@@ -100,7 +99,7 @@
 							  (H) -- (G)
 							  (G) -- (E);
 					\draw [densely dashed] (C) -- (D)
-								(H) -- (I);
+										   (H) -- (I);
 				\end{tikzpicture}
 				\caption{Link Cut Tree的一个例子}
 			\end{figure}
@@ -121,7 +120,7 @@
 		一左一右”两个集合，然后我们将这些虚边也变成一个树形结构。也就是说，我们把每个点的虚边也建成一棵树（后面称为虚树），依然加入一些虚
 		节点使得所有虚边沉到这棵树的叶子节点去，然后代表虚边的叶子节点，如果该虚边所去儿子在某条重链上，那么直接用这个儿子所在重链的splay的
 		根来表示，否则直接用该虚边表示。
-		\begin{figure}
+		\begin{figure}[!htbp]
 			\centering
 			\includegraphics[width=9.0cm]{topTree.jpg}
 			\caption{Top Tree的结构}
@@ -157,46 +156,67 @@
 		所去的儿子在某条重链上，那么我们用这个儿子所在的重链的splay的根节点表示该虚边。总的来说，Top Tree可以看成LCT和虚树相互交错联系
 		的形态。
 	\section{Implementation}
-	敝队的实现方法与tarjan论文中稍有不同，论文中的Top Tree基于RC Tree，RC Tree的信息是集中在边上维护的，我们的程序实现基于Tarjan之前发明
-	的一种数据结构——Link Cut Tree（简称lct），而lct的信息是集中在点上维护的。在此基础上改良使之同样能够实现维护子树信息的功能。Link Cut T
-	ree是一种处理动态树问题的有力武器，但一大缺陷是无法高效地维护子树信息。由于实现方法基于LCT的改良。建议读者能够先熟练掌握LCT。
-	\subsection{Link Cut Tree}
-	考虑子树操作和子树查询，若使用传统的lct，做法可以是先把询问点所在的链进行修改或结果加入答案，然后沿着虚边走到更为底端的链上继续操作。显然，这样的复杂度是我们不可以接受的。
-	但这个方法给了我们一些启示，要统计子树信息，就要想办法减小遍历虚边对复杂度的贡献。而我们可以在lct上的每一个点上都维护一个平衡树，保存子树
-	信息，使询问的时候更快地得到答案。我们称这样每个点上的平衡树为AAA Tree（有关AAA Tree的操作将在后面介绍）。\par
-	\indent 有关LCT的操作均与原LCT类似，在执行子树操作和子树询问时，我们要做access($u$)，可以把$u$和$u$的子树之间的边全部变成虚边，这样就可以简
-	化为给一棵AAA Tree打标记。link、cut、链操作以及换根操作和普通的LCT类似，需要特殊处理的是子树操作，我们的处理方式是将子树access到根，这样就
-	保证当前询问的节点到根一定是根路径，并且当前节点没有重儿子。因而询问或操作的子树节点一定是AAA Tree中的点再加上当前节点。
-	\subsection{AAA Tree}
-	\indent AAA Tree的主要操作有两个：add和delete，分别表示将一个节点插入另一个节点的AAA Tree和从一个节点的AAA Tree中删除一个节点。这部
-	分其实是非常简单的，就是普通的平衡树的插入和删除。在LCT的核心操作access中，需要注意在断开一条重链时，要把其中一个点加入另一个点的AAA Tree中，添加一条重边时要在一个点u中执行
-	delete($v$)操作。同时请注意在AAA Tree中我们仍然需要下传子树标记并且维护子树的和。\par
-	\indent 在我们的实现中，AAA Tree是使用Treap来实现的，因而效率比单独用splay的效率要高一些。
-	\subsection{Tags}
-	我们要维护两种标记，分别是链标记和子树形标记，链标记只对一颗链splay有效，而子树标记对整个子树都有效。实现上，我们可以将这两种标记分
-	优先级，子树标记是最高级，他可以改变在这个点以下的所有链标记，而链标记作用于$data$。建议为了实现上的方便使用先导型的标记，即打了标记
-	表示这个点等待操作，并且在实现时请不要使用后导型标记，即修改完之后再打标记，因为这样会造成AAA Tree和LCT的连环修改从而可能增加额外的
-	复杂度。
-	\subsection{Framework}
-	我们写了6个大类，其中的继承和组合关系如下：\par
-	\begin{figure}[!htbp]
-		\centering
-		\includegraphics[width=9.0cm]{Framework.jpg}
-		\caption{代码框架示意图}
-	\end{figure}
-	这几个类的作用如下：
-	\begin{itemize}
-		\item TBase: 用来做所有内的基类，其它类均继承自这个类；
-		\item TNode: 节点的基类，继承自TBase内部存放了两个functor的静态成员；
-		\item AuxNode: AAA Tree节点类，继承自TNode内部有update、pushTagTree等函数；
-		\item AuxTree：AAA Tree类，继承自TBase，用来存储维护虚边信息；
-		\item LCTNode：LCT节点类，继承自TNode，内部有update、pushTagTree、pushTagChain等函数；
-		\item LCTree：Link Cut Tree类，继承自TBase，用来维护实边信息和形态，并且提供用户操作端口；
-		\item Forest：主类，提供用户接口，并且内嵌一个节点类（作用类似迭代器）。
-	\end{itemize}
-	\indent 在实现过程中，我们采用了类模板的设计方法，我们传入三个类模板参数T、A、M，其中T表示数据类型，A表示一个T和T的加法仿函数（Functor），
-	M表示一个size\_t类型的和一个T类型的仿函数，这样的实现方法可以支持维护大部分数据，美中不足的是，这样的结构并不能处理多个标记的问题，
-	若需要处理，则需要至少传入6个类模板参数，分别是T、D、A、G、O、M分别是数据类型，标记类型、T和T的加法、T和D的加法、D和D的加法、size\_t和D的乘法。
+		敝队的实现方法与tarjan论文中稍有不同，论文中的Top Tree基于RC Tree，RC Tree的信息是集中在边上维护的，我们的程序实现基于Tarjan之前发明
+		的一种数据结构——Link Cut Tree（简称LCT），而lct的信息是集中在点上维护的。在此基础上改良使之同样能够实现维护子树信息的功能\cite{ref3}\cite{ref4}。Link Cut T
+		ree是一种处理动态树问题的有力武器，但一大缺陷是无法高效地维护子树信息。由于实现方法基于LCT的改良。建议读者能够先熟练掌握LCT。
+		\subsection{Link Cut Tree}
+		考虑子树操作和子树查询，若使用传统的lct，做法可以是先把询问点所在的链进行修改或结果加入答案，然后沿着虚边走到更为底端的链上继续操作。显然，这样的复杂度是我们不可以接受的。
+		但这个方法给了我们一些启示，要统计子树信息，就要想办法减小遍历虚边对复杂度的贡献。而我们可以在lct上的每一个点上都维护一个平衡树，保存子树
+		信息，使询问的时候更快地得到答案。我们称这样每个点上的平衡树为AAA Tree（有关AAA Tree的操作将在后面介绍）。\par
+		\indent 有关LCT的操作均与原LCT类似，在执行子树操作和子树询问时，我们要做access($u$)，可以把$u$和$u$的子树之间的边全部变成虚边，这样就可以简
+		化为给一棵AAA Tree打标记。link、cut、链操作以及换根操作和普通的LCT类似，需要特殊处理的是子树操作，我们的处理方式是将子树access到根，这样就
+		保证当前询问的节点到根一定是根路径，并且当前节点没有重儿子。因而询问或操作的子树节点一定是AAA Tree中的点再加上当前节点。
+		\subsection{AAA Tree}
+		\indent AAA Tree的主要操作有两个：add和delete，分别表示将一个节点插入另一个节点的AAA Tree和从一个节点的AAA Tree中删除一个节点。这部
+		分其实是非常简单的，就是普通的平衡树的插入和删除。在LCT的核心操作access中，需要注意在断开一条重链时，要把其中一个点加入另一个点的AAA Tree中，添加一条重边时要在一个点u中执行
+		delete($v$)操作。同时请注意在AAA Tree中我们仍然需要下传子树标记并且维护子树的和。\par
+		\indent 在我们的实现中，AAA Tree是使用Treap来实现的，因而效率比单独用splay的效率要高一些。
+		\subsection{Tags}
+			我们要维护两种标记，分别是链标记和子树形标记，链标记只对一颗链splay有效，而子树标记对整个子树都有效。实现上，我们可以将这两种标记分
+			优先级，子树标记是最高级，他可以改变在这个点以下的所有链标记，而链标记作用于$data$。建议为了实现上的方便使用先导型的标记，即打了标记
+			表示这个点等待操作，并且在实现时请不要使用后导型标记，即修改完之后再打标记，因为这样会造成AAA Tree和LCT的连环修改从而可能增加额外的
+			复杂度。
+		\subsection{Framework}
+			我们写了6个大类，其中的继承和组合关系如下：\par
+			\begin{figure}[!htbp]
+				\centering
+				\begin{tikzpicture}[
+						place/.style={circle,inner sep=0mm, draw=white,fill=white,thick,minimum size=6mm},
+						post/.style={->,shorten >=0pt,>=stealth,thick},
+						dot/.style={dotted,->,shorten >=0pt,>=stealth,thick}
+					]
+					\node (A) at (    0,    0) [place] {\textbf{TBase}};
+					\node (B) at ( -1.5, -1.5) [place] {\textbf{TNode}};
+					\node (C) at (   -3,   -3) [place] {\textbf{AuxNode}};
+					\node (D) at (    0,   -3) [place] {\textbf{LCTNode}};
+					\node (E) at (    3, -4.5) [place] {\textbf{AuxTree}};
+					\node (F) at (    5, -4.5) [place] {\textbf{LCTree}};
+					\node (G) at ( 0.75,   -6) [place] {\textbf{Forest}};
+					\draw [post] (A) -- (B);
+					\draw [post] (B) -- (C);
+					\draw [post] (B) -- (D);
+					\draw [post] (A) -- (E);
+					\draw [post] (A) -- (F);
+					\draw [post] (F) -- (G);
+					\draw [dot] (C) -- (E);
+					\draw [dot] (E) -- (D);
+					\draw [dot] (D) -- (F);
+				\end{tikzpicture}
+				\caption{代码框架示意图}
+			\end{figure}
+			这几个类的作用如下：
+			\begin{itemize}
+				\item TBase: 用来做所有内的基类，其它类均继承自这个类；
+				\item TNode: 节点的基类，继承自TBase内部存放了两个functor的静态成员；
+				\item AuxNode: AAA Tree节点类，继承自TNode内部有update、pushTagTree等函数；
+				\item AuxTree：AAA Tree类，继承自TBase，用来存储维护虚边信息；
+				\item LCTNode：LCT节点类，继承自TNode，内部有update、pushTagTree、pushTagChain等函数；
+				\item LCTree：Link Cut Tree类，继承自TBase，用来维护实边信息和形态，并且提供用户操作端口；
+				\item Forest：主类，提供用户接口，并且内嵌一个节点类（作用类似迭代器）。
+			\end{itemize}
+			\indent 在实现过程中，我们采用了类模板的设计方法，我们传入三个类模板参数T、A、M，其中T表示数据类型，A表示一个T和T的加法仿函数（Functor），
+			M表示一个size\_t类型的和一个T类型的仿函数，这样的实现方法可以支持维护大部分数据，美中不足的是，这样的结构并不能处理多个标记的问题，
+			若需要处理，则需要至少传入6个类模板参数，分别是T、D、A、G、O、M分别是数据类型，标记类型、T和T的加法、T和D的加法、D和D的加法、size\_t和D的乘法。
 	\newpage
 	\bibliographystyle{plain}
 	\bibliography{ref}

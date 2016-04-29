@@ -1,5 +1,16 @@
 \begin{thebibliography}{1}
 
+\bibitem{ref3}
+黄志翱.
+\newblock {\em 除草+题解：sone1}.
+\newblock
+  \url{http://hzaskywalker.blog.163.com/blog/static/20379815720135110748168/}.
+
+\bibitem{ref4}
+Tomasz Radzik.
+\newblock Implementation of dynamic trees with in-subtree operations.
+\newblock {\em Journal of Experimental Algorithmics (JEA)}, 3(9), 1998.
+
 \bibitem{ref1}
 Robert~E. Tarjan and Renato~F. Werneck.
 \newblock Self-adjusting top trees.
