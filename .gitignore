@@ -44,3 +44,4 @@ test*
 *.out
 *.log
 *.bak
+*.tex
