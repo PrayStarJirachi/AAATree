@@ -1,0 +1,13 @@
+\begin{thebibliography}{1}
+
+\bibitem{ref1}
+Robert~E. Tarjan and Renato~F. Werneck.
+\newblock Self-adjusting top trees.
+\newblock {\em SODA '05 Proceedings of the sixteenth annual ACM-SIAM symposium
+  on Discrete algorithms}, Session 1A(813-822), 2005.
+
+\bibitem{ref2}
+Wikipedia, \url{https://en.wikipedia.org/wiki/Top\_tree}.
+\newblock {\em Top Tree}.
+
+\end{thebibliography}
