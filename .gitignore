@@ -33,3 +33,14 @@ test*
 *.swp
 
 *.exe
+
+*.aux
+*.toc
+*.jpg
+*.bmp
+*.bib
+*.bbl
+*.blg
+*.out
+*.log
+*.bak
